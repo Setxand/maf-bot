@@ -8,7 +8,7 @@ import com.maf.telegram.button.InlineKeyboardButton;
 import com.maf.telegram.button.InlineKeyboardMarkup;
 import com.maf.telegram.button.KeyboardButton;
 import com.maf.telegram.button.KeyboardMarkup;
-import com.maf.user.service.CallBackData;
+import com.maf.user.service.TelegramTextCommands;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -107,7 +107,7 @@ public class TelegramClient {
 		sendInlineButtons(inlineKeyboardButtons, text, message);
 	}
 
-	public void simpleQuestion(CallBackData data, String splitter, String text, Message message) {
+	public void simpleQuestion(TelegramTextCommands data, String splitter, String text, Message message) {
 		List<InlineKeyboardButton> inlineKeyboardButtons = new ArrayList<>();
 		String yes = ResourceBundle.getBundle("dictionary").getString("YES");
 		String no = ResourceBundle.getBundle("dictionary").getString("NO");

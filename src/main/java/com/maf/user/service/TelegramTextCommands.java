@@ -2,7 +2,7 @@ package com.maf.user.service;
 
 import com.maf.user.exception.BotException;
 
-public enum CallBackData {
+public enum TelegramTextCommands {
 	START("/start"),
 	MENU("Menu"),
 	MAKE_ORDER("Make order"),
@@ -11,7 +11,7 @@ public enum CallBackData {
 
 	private final String value;
 
-	CallBackData(String value) {
+	TelegramTextCommands(String value) {
 		this.value = value;
 	}
 
@@ -19,11 +19,11 @@ public enum CallBackData {
 		return value;
 	}
 
-	public static CallBackData getByVal(String val, Integer chatId) {
+	public static TelegramTextCommands getByVal(String val, Integer chatId) {
 
-		for (CallBackData d : CallBackData.values()) {
-			if (d.value.equals(val)) {
-				return d;
+		for (TelegramTextCommands data : TelegramTextCommands.values()) {
+			if (data.value.equals(val)) {
+				return data;
 			}
 		}
 		throw new BotException(chatId, "Sorry i don't know this command((");

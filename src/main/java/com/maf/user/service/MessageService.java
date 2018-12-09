@@ -3,31 +3,35 @@ package com.maf.user.service;
 
 import com.maf.telegram.Message;
 import com.maf.user.exception.BotException;
-import org.springframework.core.io.ClassPathResource;
+import com.maf.user.model.User;
+import com.maf.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 
 @Service
 public class MessageService {
 
 	private final BotCommandService botCommandService;
+	private final UserRepository userRepo;
 
-	public MessageService(BotCommandService botCommandService) {
+	public MessageService(BotCommandService botCommandService, UserRepository userRepo) {
 		this.botCommandService = botCommandService;
+		this.userRepo = userRepo;
 	}
 
 	public void parseMessage(Message message) {
 
 		if (message.getText() != null) {
 			try {
-				checkOrder(message);
+				User user = getUser(message);
+				if (user.getStatus() != null) {
+					parseUserStatus(message, user);
+					return;
+				}
 
-
-				switch (CallBackData.getByVal(message.getText(), message.getChat().getId())) {
+				switch (TelegramTextCommands.getByVal(message.getText(), message.getChat().getId())) {
 					case START:
 						botCommandService.start(message);
 						break;
@@ -52,10 +56,32 @@ public class MessageService {
 
 	}
 
-	private void checkOrder(Message message) throws IOException {
-
+	private void parseUserStatus(Message message, User user) {
+		switch (user.getStatus()) {
+			case ORDER_1:
+				botCommandService.makeOrder1(message);
+				break;
+			case ORDER_2:
+				botCommandService.makeOrder2(message);
+				break;
+			case ORDER_3:
+				botCommandService.makeOrder3(message);
+				break;
+			case ORDER_4:
+				botCommandService.makeOrder4(message);
+				break;
+			default:
+				throw new BotException(message.getChat().getId(), "Internal server error");
+		}
 	}
 
+	private User getUser(Message message) {
+		return userRepo.findById(message.getChat().getId()).orElseGet(() -> {
+			User user = new User();
+			user.setChatId(message.getChat().getId());
+			return userRepo.saveAndFlush(user);
+		});
+	}
 }
 
 

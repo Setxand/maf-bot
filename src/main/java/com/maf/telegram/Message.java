@@ -19,4 +19,10 @@ public class Message {
 	private List<TelegramEntity> entities;
 	private List<Photo> photo;
 
+	public Message() {
+	}
+
+	public Message(Chat chat) {
+		this.chat = chat;
+	}
 }

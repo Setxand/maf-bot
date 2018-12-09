@@ -16,7 +16,7 @@ public class CallBackService {
 	public void parseCallBackQuery(CallBackQuery query) {
 
 
-		switch (CallBackData.valueOf(query.getData())) {
+		switch (TelegramTextCommands.valueOf(query.getData())) {
 			case MENU:
 				dealerService.menu(query);
 				break;

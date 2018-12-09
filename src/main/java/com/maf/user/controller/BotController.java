@@ -21,8 +21,8 @@ public class BotController {
 		updateParserService.parseUpdate(update);
 	}
 
-//	@ExceptionHandler(BotException.class)
-//	public void internalError(final BotException e) {
-//		telegramClient.sendMessage(new TelegramRequest(e.getMessage(), e.getChatId()));
-//	}
+	@ExceptionHandler(BotException.class)
+	public void internalError(final BotException e) {
+		telegramClient.sendMessage(new TelegramRequest(e.getMessage(), e.getChatId()));
+	}
 }
