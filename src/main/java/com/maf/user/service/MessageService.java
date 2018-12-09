@@ -44,6 +44,9 @@ public class MessageService {
 					case MAKE_ORDER:
 						botCommandService.makeOrder(message);
 						break;
+					case MAKE_ORDER_DELIVERY:
+						botCommandService.makeOrder(message);
+						break;
 					default:
 						throw new BotException(message.getChat().getId(), "Internal system error");
 				}
@@ -69,6 +72,9 @@ public class MessageService {
 				break;
 			case ORDER_4:
 				botCommandService.makeOrder4(message);
+				break;
+			case ORDER_1_DELIVERY:
+				botCommandService.makeOrder1(message);
 				break;
 			default:
 				throw new BotException(message.getChat().getId(), "Internal server error");

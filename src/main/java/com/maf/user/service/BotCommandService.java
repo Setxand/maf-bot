@@ -19,8 +19,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.maf.user.model.UserStatus.ORDER_FINISH;
-import static com.maf.user.model.UserStatus.ORDER_FINISH_CANCEL;
+import static com.maf.user.model.UserStatus.*;
 import static com.maf.user.service.Buttons.CANCEL;
 
 
@@ -58,9 +57,10 @@ public class BotCommandService {
 	@Transactional
 	public void makeOrder(Message message) throws IOException {
 		User user = getUser(message);
-		user.setStatus(UserStatus.ORDER_1);
+		user.setStatus(message.getText().equals(TelegramTextCommands.MAKE_ORDER_DELIVERY.getValue()) ?
+				UserStatus.ORDER_1_DELIVERY : UserStatus.ORDER_1);
 		menu(message);
-		telegramClient.simpleMessage(getBundle(user.getStatus().name()), message);
+		telegramClient.simpleMessage(getBundle(ORDER_1.name()), message);
 	}
 
 	@Transactional
@@ -79,7 +79,7 @@ public class BotCommandService {
 	public void makeOrder3(Message message) {
 		orderStep(UserStatus.ORDER_4, message);
 		List<KeyboardButton> buttons = Arrays.asList(new KeyboardButton(Buttons.ORDER.getValue()),
-				new KeyboardButton(CANCEL.name()));
+				new KeyboardButton(CANCEL.getValue()));
 
 		telegramClient.sendKeyboardButtons(message, Collections.singletonList(buttons), getBundle(UserStatus.ORDER_4.name()));
 	}
@@ -89,15 +89,24 @@ public class BotCommandService {
 		User user = getUser(message);
 		String mainButtonsText = "";
 		if (message.getText().equals(Buttons.ORDER.getValue())) {
+			orderCheckAddInfo(message, user);
 			telegramClient.simpleMessage(user.getOrderCheck(), new Message(new Chat(388073901)));//593682738
+			telegramClient.simpleMessage(user.getOrderCheck(), new Message(new Chat(593682738)));//593682738
+
 			mainButtonsText = getBundle(ORDER_FINISH.name());
 		} else {
-			user.setOrderCheck(null);
-			user.setStatus(null);
-			mainButtonsText = getBundle(ORDER_FINISH_CANCEL.name());
-		}
 
-		telegramClient.sendKeyboardButtons(message, getMainButtons(), getBundle(mainButtonsText));
+			mainButtonsText = getBundle(ORDER_FINISH_CANCEL.name());
+
+		}
+		user.setOrderCheck(null);
+		user.setStatus(null);
+		telegramClient.sendKeyboardButtons(message, getMainButtons(), mainButtonsText);
+	}
+
+	private void orderCheckAddInfo(Message message, User user) {
+		user.setOrderCheck(user.getOrderCheck() + "\n\n" + message.getChat().getFirstName() +
+				" " + message.getChat().getLastName() + ", @" + message.getChat().getUserName());
 	}
 
 	private List<List<KeyboardButton>> getMainButtons() {
@@ -109,9 +118,15 @@ public class BotCommandService {
 
 	private void orderStep(UserStatus status, Message message) {
 		User user = getUser(message);
-		user.setStatus(status);
 		String text = "\n\n" + message.getText();
-		user.setOrderCheck(user.getOrderCheck() != null ? user.getOrderCheck() + text : "New order!" + text);
+		user.setOrderCheck(user.getOrderCheck() != null ? user.getOrderCheck() + text :
+				checkOrder(user.getStatus()) + text);
+
+		user.setStatus(status);
+	}
+
+	private String checkOrder(UserStatus status) {
+		return status == ORDER_1 ? "New Order!" : "New order with delivery!";
 	}
 
 	private User getUser(Message message) {
