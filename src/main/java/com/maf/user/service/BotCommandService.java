@@ -91,7 +91,6 @@ public class BotCommandService {
 		if (message.getText().equals(Buttons.ORDER.getValue())) {
 			orderCheckAddInfo(message, user);
 			telegramClient.simpleMessage(user.getOrderCheck(), new Message(new Chat(388073901)));//593682738
-			telegramClient.simpleMessage(user.getOrderCheck(), new Message(new Chat(593682738)));//593682738
 
 			mainButtonsText = getBundle(ORDER_FINISH.name());
 		} else {
