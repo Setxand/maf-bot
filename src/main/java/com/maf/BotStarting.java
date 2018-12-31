@@ -30,6 +30,7 @@ public class BotStarting {
 			User user = userRepo.findById(admin).orElseGet(User::new);
 			user.setChatId(admin);
 			user.setRole(User.Role.ADMIN);
+			userRepo.saveAndFlush(user);
 		});
 	}
 }
