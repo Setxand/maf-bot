@@ -7,7 +7,8 @@ public enum TelegramTextCommands {
 	MENU("Menu"),
 	MAKE_ORDER("Make order"),
 	MAKE_ORDER_DELIVERY("Make order with delivery"),
-	CONTACTS("Contacts");
+	CONTACTS("Contacts"),
+	BROADCAST("Broadcast");
 
 	private final String value;
 

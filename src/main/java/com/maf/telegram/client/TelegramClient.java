@@ -11,6 +11,8 @@ import com.maf.telegram.button.KeyboardMarkup;
 import com.maf.user.service.TelegramTextCommands;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.client.RootUriTemplateHandler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -24,30 +26,33 @@ import java.util.ResourceBundle;
 public class TelegramClient {
 
 	private static final Logger log = org.apache.log4j.Logger.getLogger(TelegramClient.class);
-	@Value("${bot.url}") private String TELEGRAM_URL;
-	@Value("${server.url}") private String SERVER_URL;
+
+	private final String TELEGRAM_URL;
+	private final String SERVER_URL;
 	private RestTemplate restTemplate;
 
-	public TelegramClient() {
-		this.restTemplate = new RestTemplate();
-//		restTemplate.setUriTemplateHandler(new RootUriTemplateHandler(TELEGRAM_URL));
+	public TelegramClient(@Value("${bot.url}")
+								  String telegramUrl, @Value("${server.url}") String serverUrl) {
+
+		TELEGRAM_URL = telegramUrl;
+		SERVER_URL = serverUrl;
+		restTemplate = new RestTemplateBuilder().uriTemplateHandler(new RootUriTemplateHandler(TELEGRAM_URL)).build();
 	}
 
 	public void setWebHook() {
-		ResponseEntity<?> responseEntity = new RestTemplate()
-				.getForEntity(TELEGRAM_URL + "/setWebhook?url=" + SERVER_URL + "/maf", Object.class);
-		log.debug("Telegram`s bot webhook: " + responseEntity.getBody().toString());
+		ResponseEntity<?> responseEntity = restTemplate
+				.getForEntity("/setWebhook?url=" + SERVER_URL + "/maf", Object.class);
+		log.debug("Telegram`s bot webhook: " + responseEntity.getBody());
 	}
 
 	public void sendMessage(TelegramRequest telegramRequest) {
 		try {
-			restTemplate.postForEntity(TELEGRAM_URL + "/sendMessage", telegramRequest, Void.class);
+			restTemplate.postForEntity("/sendMessage", telegramRequest, Void.class);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
-
 
 	public void helloMessage(Message message) {
 		String messange = ResourceBundle.getBundle("dictionary").getString("HELLO_MESSAGE");
@@ -55,17 +60,14 @@ public class TelegramClient {
 		sendMessage(new TelegramRequest(messange, chatId));
 	}
 
-
 	public void simpleMessage(String message, Message m) {
 		sendMessage(new TelegramRequest(message, m.getChat().getId()));
 	}
-
 
 	public void errorMessage(Message message) {
 		String text = "men, i don`t understand this command, try again)";
 		sendMessage(new TelegramRequest(text, message.getChat().getId()));
 	}
-
 
 	public void sendButtons(Markup markup, String text, Message message) {
 		TelegramRequest telegramRequest = new TelegramRequest();
@@ -75,14 +77,13 @@ public class TelegramClient {
 		sendMessage(telegramRequest);
 	}
 
-
 	public void sendInlineButtons(List<List<InlineKeyboardButton>> buttons, String text, Message message) {
 		Markup markup = new InlineKeyboardMarkup(buttons);
 		sendButtons(markup, text, message);
 	}
 
 	public void sendPhoto(String photo, String caption, Markup markup, Message message) {
-		restTemplate.postForEntity(TELEGRAM_URL + "/sendPhoto",
+		restTemplate.postForEntity("/sendPhoto",
 				new TelegramRequest(message.getChat().getId(), markup, photo, caption), Void.class);
 	}
 
@@ -133,5 +134,4 @@ public class TelegramClient {
 		telegramRequest.setChatId(message.getChat().getId());
 		sendMessage(telegramRequest);
 	}
-
 }

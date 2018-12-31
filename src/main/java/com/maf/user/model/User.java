@@ -13,12 +13,18 @@ import javax.persistence.Id;
 @Setter
 public class User {
 
+	public enum Role {
+		ADMIN,
+		USER
+	}
+
 	@Id
 	private Integer chatId;
 
 	@Enumerated(EnumType.STRING)
 	private UserStatus status;
 	private String orderCheck;
+	private Role role;
 
 	public User() {
 	}

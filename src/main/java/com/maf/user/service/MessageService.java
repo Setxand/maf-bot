@@ -15,10 +15,12 @@ public class MessageService {
 
 	private final BotCommandService botCommandService;
 	private final UserRepository userRepo;
+	private final BotCommandOrderService orderService;
 
-	public MessageService(BotCommandService botCommandService, UserRepository userRepo) {
+	public MessageService(BotCommandService botCommandService, UserRepository userRepo, BotCommandOrderService orderService) {
 		this.botCommandService = botCommandService;
 		this.userRepo = userRepo;
+		this.orderService = orderService;
 	}
 
 	public void parseMessage(Message message) {
@@ -42,10 +44,13 @@ public class MessageService {
 						botCommandService.contacts(message);
 						break;
 					case MAKE_ORDER:
-						botCommandService.makeOrder(message);
+						orderService.makeOrder(message);
 						break;
 					case MAKE_ORDER_DELIVERY:
-						botCommandService.makeOrder(message);
+						orderService.makeOrder(message);
+						break;
+					case BROADCAST:
+						botCommandService.broadcast(message);
 						break;
 					default:
 						throw new BotException(message.getChat().getId(), "Internal system error");
@@ -62,19 +67,22 @@ public class MessageService {
 	private void parseUserStatus(Message message, User user) {
 		switch (user.getStatus()) {
 			case ORDER_1:
-				botCommandService.makeOrder1(message);
+				orderService.makeOrder1(message);
 				break;
 			case ORDER_2:
-				botCommandService.makeOrder2(message);
+				orderService.makeOrder2(message);
 				break;
 			case ORDER_3:
-				botCommandService.makeOrder3(message);
+				orderService.makeOrder3(message);
 				break;
 			case ORDER_4:
-				botCommandService.makeOrder4(message);
+				orderService.makeOrder4(message);
 				break;
 			case ORDER_1_DELIVERY:
-				botCommandService.makeOrder1(message);
+				orderService.makeOrder1(message);
+				break;
+			case BROADCAST_1:
+				botCommandService.broadcast1(message);
 				break;
 			default:
 				throw new BotException(message.getChat().getId(), "Internal server error");
