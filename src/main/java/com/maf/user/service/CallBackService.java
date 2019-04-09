@@ -1,7 +1,7 @@
 package com.maf.user.service;
 
-import com.maf.telegram.CallBackQuery;
 import org.springframework.stereotype.Service;
+import telegram.CallBackQuery;
 
 @Service
 public class CallBackService {

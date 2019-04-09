@@ -1,15 +1,15 @@
 package com.maf.user.service;
 
-import com.maf.telegram.CallBackQuery;
-import com.maf.telegram.client.TelegramClient;
+import com.maf.user.client.TelegramClientEx;
 import org.springframework.stereotype.Service;
+import telegram.CallBackQuery;
 
 @Service
 public class CallBackDealerService {
 
-	private final TelegramClient telegramClient;
+	private final TelegramClientEx telegramClient;
 
-	public CallBackDealerService(TelegramClient telegramClient) {
+	public CallBackDealerService(TelegramClientEx telegramClient) {
 		this.telegramClient = telegramClient;
 	}
 

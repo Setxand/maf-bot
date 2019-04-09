@@ -1,11 +1,10 @@
 package com.maf.user.service;
 
-
-import com.maf.telegram.Message;
 import com.maf.user.exception.BotException;
 import com.maf.user.model.User;
 import com.maf.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import telegram.Message;
 
 import java.io.IOException;
 

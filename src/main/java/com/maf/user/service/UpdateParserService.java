@@ -1,7 +1,7 @@
 package com.maf.user.service;
 
-import com.maf.telegram.Update;
 import org.springframework.stereotype.Service;
+import telegram.Update;
 
 @Service
 public class UpdateParserService {

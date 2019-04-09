@@ -1,15 +1,15 @@
 package com.maf.user.service;
 
-import com.maf.telegram.Chat;
-import com.maf.telegram.Message;
-import com.maf.telegram.button.KeyboardButton;
-import com.maf.telegram.client.TelegramClient;
+import com.maf.user.client.TelegramClientEx;
 import com.maf.user.exception.BotException;
 import com.maf.user.model.User;
 import com.maf.user.model.UserStatus;
 import com.maf.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import telegram.Chat;
+import telegram.Message;
+import telegram.button.KeyboardButton;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,11 +20,11 @@ import static com.maf.user.service.Buttons.CANCEL;
 @Service
 public class BotCommandOrderService {
 
-	private final TelegramClient telegramClient;
+	private final TelegramClientEx telegramClient;
 	private final UserRepository userRepo;
 	private final BotCommandService botCommandService;
 
-	public BotCommandOrderService(TelegramClient telegramClient, UserRepository userRepo, BotCommandService botCommandService) {
+	public BotCommandOrderService(TelegramClientEx telegramClient, UserRepository userRepo, BotCommandService botCommandService) {
 		this.telegramClient = telegramClient;
 		this.userRepo = userRepo;
 		this.botCommandService = botCommandService;

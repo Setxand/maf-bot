@@ -1,10 +1,7 @@
 package com.maf.user.service;
 
 
-import com.maf.telegram.Chat;
-import com.maf.telegram.Message;
-import com.maf.telegram.button.KeyboardButton;
-import com.maf.telegram.client.TelegramClient;
+import com.maf.user.client.TelegramClientEx;
 import com.maf.user.exception.BotException;
 import com.maf.user.model.User;
 import com.maf.user.repository.UserRepository;
@@ -14,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
+import telegram.Chat;
+import telegram.Message;
+import telegram.button.KeyboardButton;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -30,10 +30,10 @@ public class BotCommandService {
 
 	private static final int DEFAULT_PAGE_SIZE = 30;
 
-	private final TelegramClient telegramClient;
+	private final TelegramClientEx telegramClient;
 	private final UserRepository userRepo;
 
-	public BotCommandService(TelegramClient telegramClient, UserRepository userRepo) {
+	public BotCommandService(TelegramClientEx telegramClient, UserRepository userRepo) {
 		this.telegramClient = telegramClient;
 		this.userRepo = userRepo;
 	}

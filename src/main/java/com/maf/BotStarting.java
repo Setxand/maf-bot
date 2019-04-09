@@ -1,6 +1,6 @@
 package com.maf;
 
-import com.maf.telegram.client.TelegramClient;
+import com.maf.user.client.TelegramClientEx;
 import com.maf.user.model.User;
 import com.maf.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -13,17 +13,17 @@ public class BotStarting {
 
 	private final String[] admins = {"388073901"};
 
-	private final TelegramClient telegramClient;
+	private final TelegramClientEx telegramClient;
 	private final UserRepository userRepo;
 
-	public BotStarting(TelegramClient telegramClient, UserRepository userRepo) {
+	public BotStarting(TelegramClientEx telegramClient, UserRepository userRepo) {
 		this.telegramClient = telegramClient;
 		this.userRepo = userRepo;
 	}
 
 	@PostConstruct
 	public void init() {
-		telegramClient.setWebHook();
+		telegramClient.setWebHooks();
 
 		Arrays.stream(admins).forEach(a -> {
 			Integer admin = Integer.parseInt(a);
